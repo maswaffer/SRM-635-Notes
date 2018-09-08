@@ -1,0 +1,187 @@
+\documentclass[12 pt]{article}
+\pagestyle{empty}
+
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{color}
+\usepackage{ulem}
+\usepackage[pdftex]{graphicx}     
+\graphicspath{{../pdf/}{../jpeg/}{./image/}}    
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png,.jpg}   
+
+%One-Inch Margins, 8 1/2 X 11 Paper
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in}
+\setlength{\textwidth}{6.5 in}
+
+\setlength{\topmargin}{-0.75 in}
+\setlength{\footskip}{0 in}
+\setlength{\textheight}{9 in}
+
+\begin{document}
+
+\begin{center}
+	SRM 635 Notes\\
+	\color{blue}
+	Matt Swaffer Fall 2018
+	\color{black}
+\end{center}
+
+\begin{center}
+    9/4/2018
+\end{center}
+\section{Sampling}
+\begin{enumerate}
+    \item Poisson Sampling
+        \begin{itemize}
+            \item None of the totals are fixed
+            \item Independent variables
+        \end{itemize}
+    \item Multinomial Sampling
+        \begin{itemize}
+            \item Total sample size is fixed (i.e., quota for study)
+            \item Each cell is a component of a single multinomial (the total)
+            \item Considered a single independent observation
+        \end{itemize}
+    \item Independent multinomial sampling
+        \begin{itemize}
+            \item Fix totals for one variable
+            \item Each of the multinomials is an independent observation
+        \end{itemize}
+    \item Hypergeometric sampling
+        \begin{itemize}
+            \item All totals are fixed
+            \item Fisher's exact test
+            \item Control both rows and columns
+        \end{itemize}
+\end{enumerate}
+
+
+\section{Hypothesis Tests} 
+\begin{itemize} 
+    \item[1] Tests of Independence
+        \begin{itemize}
+        \item [a.] Joint = Product of marginals
+        \item [b.] You can separate probability into both rows and columns (only applicable to Poisson or Multinomial.. rows and columns must be random. Cannot have fixed rows or columns.)
+        \item [c.] Pearson's \( \chi ^2\) 
+            \begin{enumerate}
+                \item Assume Poisson sampling
+                \item Each cell is a Poisson random variable
+                \item Construct a Wald statistic for each cell\\
+                    You end up with a \(\chi ^2\) for each cell \\
+                    Sum all the \( \chi ^2 \) across the table to get a single value. 
+            \end{enumerate}
+        \item [b.]
+        \item [d.] Likelihood ratio test
+            \begin{itemize}
+                \item Idea: Compare values of the likelihood function under Null and alternative
+                \item Want to know if the additional parameters of the alternative are meaningful
+                $$ G^2=2 \sum_{i,j} n_{ij} ln \Big( \frac{n_{ij}n_{++}}{n_{i+}n_{+j}} \Big) $$
+                Same distribution, DF as Pearson \(X^2\)
+                \item Test statistic
+                $$ ln \Big( \frac{l_0}{l_a} \Big) $$
+            \end{itemize} 
+        
+        \item [e.] Residual analysis
+            \begin{itemize}
+                \item Not used for checking assumptions
+                \item Used as post-hoc calculations to identify non-independence
+                \item Pearson Residuals
+                $$e_{ij} = \frac{cell count - expected}{variation} $$ 
+                $$e_{ij} = \frac{n_{ij}-\frac{n_{i+}n_{n+j}}{n_{++}}}{\sqrt{\frac{n_{i+}n_{+j}}{n_{++}}}} $$
+                \item These are almost standard normal
+                $$e_{ij}~ N(0, \nu)  , \nu < 1$$
+                These are conservative
+                \item Standardized Pearson residuals
+                \item For \( X^2 \) at least 80\% of cells \( E_{ij} \geq 5\)
+                \item For \(G^2:  \frac{n_{++}}{IxJ}\geq 5\)
+                \item if these fail, use Fischer's Exact Test\\
+                Idea: Treat row / column totals as fixed \\
+                Identify all possible cell counts that lead to these totals\\
+                Count up all those showing "more" dependence than observed\\
+                Hypergeometric distribution???\\
+                No sample size restriction
+            \end{itemize}
+       
+    \end{itemize}
+    \vskip 1 in
+    \item [2] Test of Homogeneity
+    \vskip 1 in
+    \item [3] Tests for Ordinal Data
+        \begin{itemize}
+        \item Testing hypothesis with ordered alternatives (trends) provides greater power
+        \item [a.] Linear Trend Test
+            \begin{itemize}
+                \item \( H_0: variables are not associated \)
+                \item \( H_a: Linear trend in levels of one variable across the levels of another \)
+                \item Example: Income level\\
+                \begin{tabular}{c|c|c|c|c}
+                        & $<$ 20k & 20K - 50K & 50K - 100K & $<$ 100K\\
+                    18-24 & & & &\\
+                    25-39 &  & & &\\
+                     $<$ 40 & & & &\\
+                \end{tabular}
+                \item LT Test Statistic\\
+                Start by assigning weights to all variable levels (ordinal by magnitude\\
+                Similar to a heat map \\
+                Choose weights: \uwave{u} and \uwave{v}\\
+                Use weighted sum:\\
+                $ S = \sum_{i,j} n_{ij} u_i v_j $\\\\
+                $ Q=\frac{(S-E[s]^2)}{Var(s)} $ \\
+                -Essentially weighted correlation\\
+                \(Q = M^2 = (n_{++}-1)r^2 = X^2(1)\)\\
+                If you know ahead of time, you can perform a one-sided test, Use M, otherwise use \(M^2\) for two-sided\\
+                One sided: \(H_0: no trend | H_a: trend\)\\
+                Two sided: \(H_0: no trend | H_a: + / - trend\)\\  
+                Small p value = "data provided sufficient evidence to conclude that the weight / magnitude / heat of income level counts changed linearly with increased age"
+            \end{itemize}
+        
+    \end{itemize}
+    \vskip 1 in
+    \item [---] Properties of 3 Categorical Variables 
+        \begin{enumerate}
+                \item Marginal: sum over 3rd variable
+                \item Conditional: Make conclusions for each level of 3rd variable 
+            \end{enumerate}
+    \vskip 1 in
+    \item [---] Marginal Independence \\
+        $ \pi_{ij} = \pi_{i++} \pi_{+j+} $
+    \vskip 1 in
+    \item [4.] Conditional Independence
+        \begin{itemize}
+        \item Probabilistic definition\\
+        $P(Y=i|X=j, Z=k) = P(Y=i|Z=k)$\\
+        Y independent of X conditional on Z\\
+        \item Joint probability: \( \frac{Product of row, col calc given z}{distribution of z}\)\\
+        $ \pi_{ij} = \frac{\pi_{i+k} \pi_{+jk}}{\pi_{++K}}$\\
+        Columns are conditionally independent of the rows IF:\\
+        $\pi_{ijk} = \frac{\pi_{i+k} \pi_{+jk}}{\pi_{++k}}$ for any k\\
+        (In other words... there is no interaction of rows and columns based on the 3rd variable)\\
+        \item Conditional Independence: \( \theta_{xy|i} = 1 for every k \)
+        \item Cochran - Mantel - Haenszel Test of Conditional independence\\
+        \( H_0\): two variables (x and y) are independent of each other conditional on another variable) \\
+        \( H_a\): two variables (x and y) are not independent ...\\
+        \( H_0: \theta_{xy|z} = 1\)\\
+        \( H_a:\) at least one \(\theta_{xy|k} \neq 0\)\\
+        \(CMH = X^2(1)\)\\
+        small p \\
+        "At least one of the cities there is an association between smoking and cancer"\\
+        \item [---] Homogenous association
+        \begin{itemize}
+            \item Weaker than conditional independence
+            \item 2 variables can be associated but must be associated equally across levels of z\\
+            The variables can be related, but it does not change based on the level of the third variable. (There is no interaction effect)\\
+            \item Breslow-Day Test \\
+            large p\\
+            "fail to reject evidence that association is the same across cities"
+        \end{itemize}
+        \item Conditional independence implies homogenous association.
+        \item The relationship between x and y does not depend on z 
+        \item The cell counts are your outcome... everything else is an IV.\\ 
+        There is no three-way interaction between x, y and z.
+    \end{itemize}
+
+\end{itemize}
+\end{document}
