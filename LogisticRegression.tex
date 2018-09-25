@@ -1,0 +1,95 @@
+\documentclass[12 pt]{article}
+\pagestyle{empty}
+
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{color}
+\usepackage{ulem}
+\usepackage[pdftex]{graphicx}     
+\graphicspath{{../pdf/}{../jpeg/}{./image/}}    
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png,.jpg}   
+
+%One-Inch Margins, 8 1/2 X 11 Paper
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in}
+\setlength{\textwidth}{6.5 in}
+
+\setlength{\topmargin}{-0.75 in}
+\setlength{\footskip}{0 in}
+\setlength{\textheight}{9 in}
+
+\begin{document}
+
+\begin{center}
+	SRM 635 Notes\\
+	\color{blue}
+	Matt Swaffer Fall 2018
+	\color{black}
+\end{center}
+
+\begin{center}
+    9/4/2018
+\title{Logistic Regression}
+\end{center}
+\section{Introduction}
+\begin{itemize}
+    \item Model outcomes with two mutually exclusive options \\
+          yes / no \\
+          on / off \\
+          pass / failed 
+    \item Still model the mean, but for binary, non-numeric data the mean: is the proportion or the probability associated with one of the events. 
+    \item Model probability \( \pi \) in terms of different predictors \( x_1, x_2 ... \)
+    \item Ways to connect / link probability to predictors\\
+        \begin{itemize}
+            \item Linear\\
+                $ \pi_i = \beta_0 + \beta_1 X_1 $ \\
+                Can work on restricted ranges / windows
+            \item Logit\\
+                Relates canonical function of the binomial to different predictors\\
+                "Canonical" inherently tied to the likelihood\\
+                $ ln \Big(\dfrac{\pi_i}{1-\pi_i} \Big) = \beta_0 + \beta_1 X_i  $\\
+                $ logit(\pi_i) = \beta_0 + \beta_1 X_i  $
+                (Interpretation: odds ratio)
+            \item Probit\\
+                Use the normal CDF \\
+                Takes any number, returns a number and returns a value between 0 and 1\\
+                $\Phi^-1(\pi_i) = \beta_0 + \beta_1 X_i$\\
+                (Interpretations: hard)
+            \item CLL (complementary log-log)\\
+                $ ln(-ln(\pi_i)) = \beta_0 + \beta_1 X_i  $\\
+                (Interpretations: hard)
+        \end{itemize}
+    \item Interpretations with different IV's
+        \begin{itemize}
+            \item 1 Binary IV \\
+            $ ln(\dfrac{\pi_i}{1-\pi_i}=\beta_0 + \beta_1 G_i$\\
+            $ ln(\dfrac{\pi_i}{1-\pi_i}=\beta_0$\\
+            $ \dfrac{\pi_i}{1-\pi_i} = \epsilon^\beta_0$\\
+            $ \pi_i = \epsilon^{\beta_0} - \epsilon^{\beta_0} \pi_i$\\
+            $ \pi_i = \dfrac{\epsilon^{\beta_0}}{1+\epsilon^{\beta_0}}$\\
+            Probability of college for males\\\\
+            $ \pi_i = \dfrac{\epsilon^{(\beta_0 + \beta_1)}}{1+\epsilon^{(\beta_0 + \beta_1)} }$\\
+            Probability of college for females
+            \item 1 Categorical Predictor \\
+            Model likelihood of college admission using city of birth\\
+            {Denver, NY, Tallahassee, Fort Morgan}\\
+            $ln(\dfrac{\pi_i}{1-\pi_i}) = \beta_0 + \beta_1 D_i + \beta_2 N_i + \beta_3 T_i$\\
+            Prob for Denver: $ \pi_i = \dfrac{\epsilon^{(\beta_0 + \beta_1)}}{1 + \epsilon^{(\beta_0 + \beta_1)}}$\\\\
+            Odds for Denver: $\dfrac{\pi_i}{1-\pi_i} = \epsilon ^{(\beta_0 + \beta_1)} $\\\\
+            Odds ration Denver vs Tallahassee: $ \Theta_{DT} = \dfrac{\epsilon ^{(\beta_0 + \beta_1)}}{\epsilon ^{(\beta_0 + \beta_3)}} $
+            \item 1 Continuous IV\\
+            EX: Likelihood of college using family income\\
+            Usually don't use probability because you have a different value for every X\\\\
+            Typically use odds ratios. \\
+            Model will give us the log of the odds ratio. \\
+            $ \Theta_{x_2 x_1} = e^{\beta_1}$\\
+            Interpretation: \( e^{\beta_1} \) = expected change in odds of success for a 1 unit increase in x. \\
+            Other changes: \( x_1 = N, x_2 = N + k \) \\
+            $ \Theta_{21} = e^{k\beta_1}$\\
+        \end{itemize}
+        
+\end{itemize}
+
+\end{document}

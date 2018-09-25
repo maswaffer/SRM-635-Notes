@@ -1,0 +1,220 @@
+\documentclass[12 pt]{article}
+\pagestyle{empty}
+
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{color}
+\usepackage{ulem}
+\usepackage[pdftex]{graphicx}     
+\graphicspath{{../pdf/}{../jpeg/}{./image/}}    
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png,.jpg}   
+
+%One-Inch Margins, 8 1/2 X 11 Paper
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in}
+\setlength{\textwidth}{6.5 in}
+
+\setlength{\topmargin}{-0.75 in}
+\setlength{\footskip}{0 in}
+\setlength{\textheight}{9 in}
+
+\begin{document}
+
+\begin{center}
+	SRM 635 Notes\\
+	\color{blue}
+	Matt Swaffer Fall 2018
+	\color{black}
+\end{center}
+
+\begin{center}
+    9/11/2018
+\end{center}
+\section{Log Linear Models}
+\begin{enumerate}
+    \item There is a 3rd variable in every contingency table
+        \begin{enumerate}
+            \item Rows (x) - predictor
+            \item Column (y) - preditor
+            \item Outcome - response, counts (n) \( n_{ij}\)
+        \end{enumerate}
+        Model the mean of the counts
+    \item \( E[n_{ij}] = \mu_{ij} = n_{++} \pi_{ij} \)
+    \item If you have 2 variables, you have two choices: Independence / Saturated
+        \begin{itemize}
+            \item Independence Model
+                \begin{itemize}
+                    \item \( \mu_{ij} = n_{++} \pi_{ij} \)\\
+                          \( \mu_{ij} = n_{++} \pi_{i+} \pi_{+j} \)\\
+                          \( ln(\mu_{ij}) = ln(n_{++}) + ln(\pi_{i+}) + ln(\pi_{+j}) \) 
+                    \item (multiplicative so take the natural log which takes product and turns it into a sum)
+                    \item \( ln(\mu_{ij} = \lambda + \lambda^x_i + \lambda^y_j \)\\
+                          \( \lambda \) = constant\\
+                          \( \lambda^x_i \) adjustment for level i of x \\
+                          \( \lambda^y_j \) adjustment for level j of y\\
+                    \item Assume\\
+                          \( \lambda^x_I = 0 \)\\
+                          \( \lambda^y)J = 0 \)\\
+                          the top levels have no effect
+                    \item Interpretations\\
+                          \( ln(RR) = ln \big(\cfrac{\pi_{11}}{\pi_{21}}  \big)  \) \\
+                          \( ln(RR) = ln \big( \cfrac{n_{++}\pi_{11}}{n_{++}\pi_{21}} \big) \) \\
+                          \( ln(RR) = ln \big( \cfrac{\mu_{11}}{\mu_{21}} \big) \) \\
+                          \( ln(RR) = ln(\mu_{11}) - ln(\mu_{21}) \) \\
+                    \item Exponentiating differences
+                    \item Estimating \( \lambda \) \\
+                          Assume Poisson sampling\\
+                          Independent Cells \\
+                          Maximize \( ln(l) wrt \mu \) \\
+                    \item Newton-Raphson method (iterative)
+                \end{itemize}
+            \item Saturated Model
+                \begin{itemize}
+                    \item No longer assume independence
+                    \item \( ln(\mu_{ij} = \lambda + \lambda^x_i + \lambda^y_j + \lambda^{xy}_{ij} \) \\
+                    Typically: \( \lambda^{XY}_{Ij} = 0 \) \\
+                            \( \lambda^{XY}_{iJ} = 0 \) \\
+                    Make the table out of these assumptions
+                    \item Interpretation: \\
+                        Odds ratio: If there are interactions, the odds ratio is not 1.
+                \end{itemize}
+        \end{itemize}
+        \item Three-Factor log-linear models
+            \begin{itemize}
+                \item Mutual Independence Model
+                \item Joint Independence Model
+                \item Conditional Independence Model
+                \item Homogenous Association
+                \item Saturated
+            \end{itemize}
+            \begin{enumerate}
+                \item Mutual Independence Model
+                    \begin{itemize}
+                        \item 3 categorical variables (x,y,z)
+                        \item Any pair is independent
+                        \item Outcome: count \( n_{ijk} \)
+                        \item \( \pi_{ijk} = \pi_{i++} \pi_{+j+} \pi_{++k} \)
+                        \item \( n_{ijk} = n_{+++} \pi_{ijk} \)
+                        \item MODEL \\
+                            $ln(\mu_{ijk} = \lambda + \lambda^x_i + \lambda^y_j + \lambda^z_k$ \\
+                            There are no interactions in this model... only main effects. 
+                        \item Notation: list highest order terms. Since no interactions, only list the main effects (XYZ)
+                    \end{itemize}
+                \item Joint Independence
+                    \begin{itemize}
+                        \item Assumption is that one variable (x) is independent of the joint distribution of the other (y,z). 
+                        \item Ex: "Age group and income are both related, however gender is unrelated"
+                        \item \( \pi_{ijk} = \pi_{i++} \pi_{+jk} \)
+                        \item MODEL \\
+                            $ln(\mu_{ijk} = \lambda + \lambda^x_i + \lambda^y_j + \lambda^z_k + \lambda^{yz}_{jk}$ \\
+                        \item Notation: (YZ)
+                    \end{itemize}
+                \item Conditional Independence
+                    \begin{itemize}
+                        \item At every level of z, x and y are independent
+                        \item \( \pi_{ij|k} = \pi_{i+|k} \pi_{+j|k} \)
+                        \item MODEL \\
+                            $ln(\mu_{ijk} = \lambda + \lambda^x_i + \lambda^y_j + \lambda^z_k + \lambda^{xz}_{ik} + \lambda^{yz}_{jk}$ \\
+                        \item Notation: (XZ,YZ)
+                        \item Interpretation \\
+                        $ \Theta_{ij|k} = \dfrac{\pi_{ijk}\pi_{i\prime j \prime k}}{\pi_{ij\prime k} \pi_{i\prime jk}} $\\
+                        Odd ratios \\
+                        $ \Theta_{xy|k} = 1$  Conditional Independence\\
+                        $ \Theta_{xz|j} = C_{xz} Homogenous$\\
+                        $ \Theta_{yz|i} = C_{yz} Homogenous$
+                    \end{itemize}
+                \item Homogenous Association
+                    \begin{itemize}
+                        \item MODEL \\
+                            $ln(\mu_{ijk} = \lambda + \lambda^x_i + \lambda^y_j + \lambda^z_k + \lambda^{xz}_{ik} + \lambda^{yz}_{jk} + \lambda^{xy}_{ij}$ \\
+                        \item Notation: (XZ,YZ, YZ)
+                        \item Interpretation
+                        Odd ratios \\
+                        $ \Theta_{xy|k} = C_{xy}$ Homogenous\\
+                        $ \Theta_{xz|j} = C_{xz}$ Homogenous \\
+                        $ \Theta_{yz|i} = C_{yz}$ Homogenous
+                    \end{itemize}
+                \item Saturated 
+                    \begin{itemize}
+                        \item MODEL \\
+                            $ln(\mu_{ijk} = \lambda + \lambda^x_i + \lambda^y_j + \lambda^z_k + \lambda^{xz}_{ik} + \lambda^{yz}_{jk} + \lambda^{xy}_{ij} + \lambda^{xyz}_{ijk}$ \\
+                        \item Notation: (XZ,YZ,YZ,XYZ) 
+                        \item Interpretation
+                        Odd ratios \\
+                        $ \Theta_{xy|k} = $ depends on k\\
+                        $ \Theta_{xz|j} = $ depends on j \\
+                        $ \Theta_{yz|i} = $ depends on i
+                    \end{itemize}
+            \end{enumerate}
+            Interpretations
+            \begin{itemize}
+                \item Main effects are odds\\
+                \item Interactions are odds ratios\\
+                \item 3 factor interactions are ratios of odds ratios
+            \end{itemize}
+            \textbf{Models are all nested within each other}\\
+            \begin{itemize}
+                \item Fitting models is testing to see if there is significant difference between models
+                \item As your model gets larger, does adding information help?
+                \item If so, then you haven't met the assumptions of the smaller model.
+                \item No epsilons in the log linear models because we are modeling the means... this is a parameter not expected values. 
+            \end{itemize}
+    \item Inferential Methods
+        \begin{itemize}
+            \item Model Fit
+                \begin{itemize}
+                    \item Does the model remain close to the data?
+                    \item Hypothesis: \\
+                    $ H_0:$ fit is good\\
+                    $ H_a:$ fit is not good
+                    \item Pearson \( \chi^2 \) Statistic\\
+                             $$ \chi^2 = \sum_{i,j,k} \dfrac{n_{ijk}-\hat{\mu}_{ijk}}{\hat{\mu}_{ijk}} $$
+                    \item Likelihood Ratio Statistic \\
+                    $$ G^2 = -2ln\big(\frac{l_{H0}}{l_{ha}} $$
+                    Always comparing your model to the data (saturated model)\\
+                    To compare two models, take the difference in \( G^2 \) values.
+                \end{itemize}
+            \item Residual Analysis
+                \begin{itemize}
+                    \item Pearson Residuals\\
+                    $ e_{ijk} = \dfrac{n_{ijk}- \hat{\mu_{ijk}}}{\sqrt{\hat{\mu_{ijk}}}} $\\
+                    $ ~N(0,\nu), \nu < 1$
+                    \item Standardized Pearson Residuals\\
+                    $ e_{ijk} = \dfrac{\widetilde{e}_{ijk}}{\sqrt{1-h_{ijk}}} $\\
+                    (Factors in some things to make a standard normal)\\
+                    $ \sim N(0,1)$
+                    \item Deviance Residuals \\
+                    Very general residuals defined as components of the likelihood ratio statistic. \\\\
+                    Starts with \(G^2\) statistic 
+                    $ G^2 = -2(LL(\hat{\mu}_{ijk}, n_{ijk}) - LL(n_{ijk}, n_{ijk}) $\\
+                    (This compares the model to the data)\\\\
+                    You can assume any likelihood distribution you think makes sense... Poisson, Bernoulli, Binomial. \\
+                    \(D^2\) is sum of residuals of the model... the deviance from the model. 
+                \end{itemize}
+            \item Hypothesis Tests: About the Model
+                \begin{itemize}
+                    \item Use either Likelihood Ratio Tests or Deviance Models \\
+                    \( G^2 - or - D^2 \) \\
+                    \item Default is\\
+                    $ G^2 = -2(LL(model) - LL(data)$\\
+                    $ \sim\chi^2(DF=diff-in-parameters)$
+                    \item Make other comparisons between any models using \( G^2 - or - D^2 \) \\
+                    \item EX: Test for conditional independence \\
+                    $MI \gg JI \gg CI \gg HA \gg S$\\
+                    Compare CI model to the next model without this assumption. \\
+                    Which is HA. \\
+                    $H_0 = CI is met, \Theta_{ij|k} = 1$ No meaningful distance\\
+                    $H_a = CI is not met, at least one \Theta_{ij|k} \neq 1$ Meaningful distance\\
+                    If you fail to reject, you stick with the smaller model (HA). \\\\
+                    $G^2(CI, HA) = G^2(CI) - G^2(HA), \sim\chi^2(diff-in-param)$
+                \end{itemize}
+                
+            \item Hypothesis Tests: About Parameters\\
+                Just use a Wald Test. 
+        \end{itemize}
+\end{enumerate}
+
+
+\end{document}
